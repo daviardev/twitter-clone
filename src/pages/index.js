@@ -1,5 +1,7 @@
 import Head from 'next/head'
 
+import Sidebar from 'components/Sidebar'
+
 const Home = () => {
   return (
     <>
@@ -9,6 +11,14 @@ const Home = () => {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.png' />
       </Head>
+
+      <main className='bg-black min-h-screen flex max-w-[1500px] mx-auto'>
+        <Sidebar />
+        {/* Feed */}
+        {/* Widgets */}
+
+        {/* Modal */}
+      </main>
     </>
   )
 }
