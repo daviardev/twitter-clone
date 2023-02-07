@@ -4,11 +4,17 @@ import { useState, useRef } from 'react'
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
 
+import { db, storage } from 'firebase/client'
+
+import { getDownloadURL, ref, uploadString } from 'firebase/storage'
+import { addDoc, collection, doc, serverTimestamp, updateDoc } from 'firebase/firestore'
+
 import { HiX, HiPhotograph, HiOutlineChartBar, HiOutlineEmojiHappy, HiOutlineCalendar } from 'react-icons/hi'
 
 const Input = () => {
   const [file, setFile] = useState(null)
   const [input, setInput] = useState('')
+  const [loading, setLoading] = useState(false)
   const [showEmoji, setShowEmoji] = useState(false)
 
   const fileRef = useRef(null)
@@ -26,7 +32,39 @@ const Input = () => {
   }
 
   // Postear publicación
-  const sendPost = () => {}
+  const sendPost = async () => {
+    loading && setLoading(true)
+
+    // Refenecia a los datos que se suben cuando se postea un twit
+    const docRef = await addDoc(collection(db, 'posts'), {
+      // id: session.user.uid,
+      // username: session.user.name,
+      // userImg: session.user.image,
+      // tag: session.user.tag,
+      text: input,
+      createdAt: serverTimestamp()
+    })
+
+    // Se crea una ruta para cada imagen
+    const imageRef = ref(storage, `posts/${docRef.id}/image`)
+
+    // Cuando se sube una imagen, se hace referencia a la ruta para obtener el string de la URL de la imagen
+    // para que de esa manera actualizarla y que la pueda colocar en el firestore correspondiente al twit
+    if (file) {
+      await uploadString(imageRef, file, 'data_url')
+        .then(async () => {
+          const downloadUrl = await getDownloadURL(imageRef)
+          await updateDoc(doc(db, 'posts', docRef.id), {
+            image: downloadUrl
+          })
+        })
+    }
+
+    setLoading(false) // Cuando termina de postear, deja de cargar
+    setInput('') // El input se vacía
+    setFile(null) // No hay archivos seleccionados
+    setShowEmoji(false) // Cierra la ventana de emojis
+  }
 
   return (
     <>
