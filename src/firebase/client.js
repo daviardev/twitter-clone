@@ -1,6 +1,7 @@
-import { initializeApp } from 'firebase/app'
+import { initializeApp, getApp, getApps } from 'firebase/app'
 
-import { getAuth } from 'firebase/auth'
+import { getStorage } from 'firebase/storage'
+import { getFirestore } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: process.env.PUBLIC_NEXT_APIKEY,
@@ -11,4 +12,8 @@ const firebaseConfig = {
   appId: process.env.PUBLIC_NEXT_APPID
 }
 
-const app = initializeApp(firebaseConfig)
+// Cuando detecta muchas aplicaciones de firebase, solo obtiene una para evitar errores
+export const app = !getApps().length ? initializeApp(firebaseConfig) : getApp()
+
+export const db = getFirestore()
+export const storage = getStorage()
