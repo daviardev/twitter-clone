@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 
 import data from '@emoji-mart/data'
 import Picker from '@emoji-mart/react'
@@ -17,9 +17,16 @@ const Input = () => {
   const [loading, setLoading] = useState(false)
   const [showEmoji, setShowEmoji] = useState(false)
 
-  const fileRef = useRef(null)
+  const addImageToPost = e => {
+    const reader = new FileReader()
+    if (e.target.files[0]) {
+      reader.readAsDataURL(e.target.files[0])
+    }
 
-  const addImageToPost = () => {}
+    reader.onload = (readerEvent) => {
+      setFile(readerEvent.target.result)
+    }
+  }
 
   // Recorre la lista de los emojis
   const addEmoji = e => {
@@ -33,8 +40,8 @@ const Input = () => {
 
   // Postear publicación
   const sendPost = async () => {
-    loading && setLoading(true)
-
+    if (loading) return
+    setLoading(true)
     // Refenecia a los datos que se suben cuando se postea un twit
     const docRef = await addDoc(collection(db, 'posts'), {
       // id: session.user.uid,
@@ -68,7 +75,7 @@ const Input = () => {
 
   return (
     <>
-      <div className='border-b border-gray-700 p-3 flex space-x-3 overflow-y-hidden'>
+      <div className={`border-b border-gray-700 p-3 flex space-x-3 overflow-y-hidden ${loading && 'opacity-60'}`}>
         <Image
           src='https://yt3.ggpht.com/yti/AHXOFjXXxz_CkO1dprbCdY1D9mPfpirzvxHln1aXvnLTfA=s88-c-k-c0x00ffffff-no-rj-mo'
           alt='Profile image'
@@ -94,65 +101,67 @@ const Input = () => {
                 >
                   <HiX className='text-white h-5' />
                 </div>
-                <Image
+                <img
                   src={file}
                   alt='Photo'
-                  width={30}
-                  height={30}
                   className='rounded-2xl max-h-80 object-contain'
                 />
               </div>
             )}
           </div>
-          <div className='flex items-center justify-between pt-2.5'>
-            <div className='flex items-center'>
-              <div
+          {!loading && (
+            <div className='flex items-center justify-between pt-2.5'>
+              <div className='flex items-center'>
+                <div
                 // Al hacer referencia al input y dar clic al ícono, se abre la ventana para
                 // seleccionar la imagen
-                className='icon' onClick={() => fileRef.current.click()}
-              >
-                <HiPhotograph className='h-[22px] text-[#1d9bf0]' />
-                <input
-                  ref={fileRef}
-                  type='file'
-                  hidden
-                  accept='image/*' // Acepta todos las extensiones de imágenes
-                  onChnage={addImageToPost}
-                />
-              </div>
-
-              <div className='icon rotate-90'>
-                <HiOutlineChartBar className='text-[#1d9bf0] h-[22px]' />
-              </div>
-
-              <div className='icon' onClick={() => setShowEmoji(!showEmoji)}>
-                <HiOutlineEmojiHappy className='text-[#1d9bf0] h-[22px]' />
-              </div>
-
-              <div className='icon'>
-                <HiOutlineCalendar className='text-[#1d9bf0] h-[22px]' />
-              </div>
-
-              {/* Esconde y muestra la ventana de los emojis */}
-              {showEmoji && (
-                <div className='absolute mt-[465px] -ml-[60px] max-w-xs rounded-[20px]'>
-                  <Picker
-                    onEmojiSelect={addEmoji}
-                    data={data}
+                  className='icon'
+                >
+                  <label htmlFor='file'>
+                    <HiPhotograph className='h-[22px] text-[#1d9bf0] cursor-pointer' />
+                  </label>
+                  <input
+                    id='file'
+                    type='file'
+                    accept='image/*'
+                    hidden
+                    onChange={addImageToPost}
                   />
                 </div>
-              )}
 
-            </div>
-            <button
-              className='bg-[#1d9bf0] text-white rounded-full px-4 py-1.5 font-bold shadow-md hover:bg-[#1a8cd8] disabled:hover:bg-[#1d9bf0] disabled:opacity-50 disabled:cursor-default'
+                <div className='icon rotate-90'>
+                  <HiOutlineChartBar className='text-[#1d9bf0] h-[22px]' />
+                </div>
+
+                <div className='icon' onClick={() => setShowEmoji(!showEmoji)}>
+                  <HiOutlineEmojiHappy className='text-[#1d9bf0] h-[22px]' />
+                </div>
+
+                <div className='icon'>
+                  <HiOutlineCalendar className='text-[#1d9bf0] h-[22px]' />
+                </div>
+
+                {/* Esconde y muestra la ventana de los emojis */}
+                {showEmoji && (
+                  <div className='absolute mt-[465px] -ml-[60px] max-w-xs rounded-[20px]'>
+                    <Picker
+                      onEmojiSelect={addEmoji}
+                      data={data}
+                    />
+                  </div>
+                )}
+
+              </div>
+              <button
+                className='bg-[#1d9bf0] text-white rounded-full px-4 py-1.5 font-bold shadow-md hover:bg-[#1a8cd8] disabled:hover:bg-[#1d9bf0] disabled:opacity-50 disabled:cursor-default'
               // EL botón no se habilita hasta que reciba un String y no un espacio vacío
-              disabled={!input.trim() && !file}
-              onClick={sendPost}
-            >
-              Tweet
-            </button>
-          </div>
+                disabled={!input.trim() && !file}
+                onClick={sendPost}
+              >
+                Tweet
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </>
