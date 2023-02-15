@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 
-const nextConfig = {
-  // Config next
+module.exports = {
+  images: {
+    domains: ['yt3.ggpht.com']
+  }
 }
-
-module.exports = nextConfig
