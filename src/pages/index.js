@@ -14,17 +14,22 @@ export default function Home ({ trendingResults, followResults, providers }) {
     <div className=''>
       <Head>
         <title>Home / Twitter</title>
+        <meta name='description' content='Twitter clone with Nextjs and firebase 9' />
+        <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.png' />
       </Head>
 
       <main className='bg-black min-h-screen flex max-w-[1500px] mx-auto'>
         <Sidebar />
         <Feed />
+        {/* Widgets */}
+
+        {/* Modal */}
       </main>
     </div>
   )
 }
-
+// API for get new notice and detect session
 export async function getServerSideProps (context) {
   const newsResults = await fetch('https://saurav.tech/NewsAPI/top-headlines/category/business/us.json')
     .then((res) => res.json())
