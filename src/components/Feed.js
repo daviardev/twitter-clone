@@ -1,8 +1,25 @@
+import { useEffect, useState } from 'react'
+
 import { HiOutlineSparkles } from 'react-icons/hi'
 
 import Input from 'components/Input'
 
+import { db } from 'firebase/client'
+
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore'
+
 const Feed = () => {
+  const [posts, setPosts] = useState([])
+
+  // Get posts
+  useEffect(() => {
+    onSnapshot(
+      query(collection(db, 'posts'), orderBy('createdAt', 'desc')), // Get and order posts
+      snapshot => {
+        setPosts(snapshot.docs)
+      }
+    )
+  }, [db])
   return (
     <>
       <div className='flex-grow border-l border-r border-gray-700 max-w-2xl sm:ml-[73px] xl:ml-[370px]'>
@@ -14,6 +31,7 @@ const Feed = () => {
         </div>
 
         <Input />
+        <div className='pb-72' />
       </div>
     </>
   )
