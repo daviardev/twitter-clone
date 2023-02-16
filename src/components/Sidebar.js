@@ -8,7 +8,7 @@ import { RiHome7Fill } from 'react-icons/ri'
 import { BsBookmark } from 'react-icons/bs'
 import { HiOutlineInbox, HiOutlineClipboardList, HiOutlineUser, HiOutlineDotsCircleHorizontal, HiOutlineDotsHorizontal } from 'react-icons/hi'
 
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 
 const Sidebar = () => {
   const { data: session } = useSession()
@@ -35,7 +35,7 @@ const Sidebar = () => {
           <SidebarLink text='More' Icon={HiOutlineDotsCircleHorizontal} />
         </div>
         <button className='hidden xl:inline ml-auto bg-[#1d9bf0] text-white rounded-full w-56 h-[54px] text-lg shadow-md font-bold hover:bg-[#1a8cd8]'>Tweet</button>
-        <div className='text-[#9d9d9d] flex items-center justify-center hoverAnimation xl:ml-auto xl:-mr-5 mt-auto'>
+        <div className='text-[#9d9d9d] flex items-center justify-center hoverAnimation xl:ml-auto xl:-mr-5 mt-auto' onClick={signOut}>
           <Image
             alt='Profile image'
             src={session.user.image}
@@ -45,7 +45,7 @@ const Sidebar = () => {
           />
           <div className='hidden xl:inline mr-7'>
             <h4 className='font-bold'>{session.user.name}</h4>
-            <p className='text-[#6e767d]'>@{session.user.name}</p>
+            <p className='text-[#6e767d]'>@{session.user.tag}</p>
           </div>
           <HiOutlineDotsHorizontal className='h-5 hidden xl:inline text-[23px] ml-10' />
         </div>
