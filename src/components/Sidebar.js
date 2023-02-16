@@ -8,7 +8,11 @@ import { RiHome7Fill } from 'react-icons/ri'
 import { BsBookmark } from 'react-icons/bs'
 import { HiOutlineInbox, HiOutlineClipboardList, HiOutlineUser, HiOutlineDotsCircleHorizontal, HiOutlineDotsHorizontal } from 'react-icons/hi'
 
+import { useSession } from 'next-auth/react'
+
 const Sidebar = () => {
+  const { data: session } = useSession()
+
   return (
     <>
       <div className='hidden sm:flex flex-col items-center xl:items-start xl:w-[340px] p-2 fixed h-full'>
@@ -34,14 +38,14 @@ const Sidebar = () => {
         <div className='text-[#9d9d9d] flex items-center justify-center hoverAnimation xl:ml-auto xl:-mr-5 mt-auto'>
           <Image
             alt='Profile image'
-            src='https://yt3.ggpht.com/yti/AHXOFjXXxz_CkO1dprbCdY1D9mPfpirzvxHln1aXvnLTfA=s88-c-k-c0x00ffffff-no-rj-mo'
+            src={session.user.image}
             width={100}
             height={100}
             className='h-10 w-10 rounded-full xl:mr-2.5'
           />
           <div className='hidden xl:inline mr-7'>
-            <h4 className='font-bold'>daviardev</h4>
-            <p className='text-[#6e767d]'>@daviardev</p>
+            <h4 className='font-bold'>{session.user.name}</h4>
+            <p className='text-[#6e767d]'>@{session.user.name}</p>
           </div>
           <HiOutlineDotsHorizontal className='h-5 hidden xl:inline text-[23px] ml-10' />
         </div>

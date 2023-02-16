@@ -9,6 +9,8 @@ import { db, storage } from 'firebase/client'
 import { getDownloadURL, ref, uploadString } from 'firebase/storage'
 import { addDoc, collection, doc, serverTimestamp, updateDoc } from 'firebase/firestore'
 
+import { useSession } from 'next-auth/react'
+
 import { HiX, HiPhotograph, HiOutlineChartBar, HiOutlineEmojiHappy, HiOutlineCalendar } from 'react-icons/hi'
 
 const Input = () => {
@@ -16,6 +18,8 @@ const Input = () => {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [showEmoji, setShowEmoji] = useState(false)
+
+  const { data: session } = useSession()
 
   const addImageToPost = e => {
     const reader = new FileReader()
@@ -77,7 +81,7 @@ const Input = () => {
     <>
       <div className={`border-b border-gray-700 p-3 flex space-x-3 overflow-y-hidden ${loading && 'opacity-60'}`}>
         <Image
-          src='https://yt3.ggpht.com/yti/AHXOFjXXxz_CkO1dprbCdY1D9mPfpirzvxHln1aXvnLTfA=s88-c-k-c0x00ffffff-no-rj-mo'
+          src={session.user.image}
           alt='Profile image'
           width={100}
           height={100}
