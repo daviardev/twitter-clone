@@ -4,7 +4,7 @@ import Feed from 'components/Feed'
 import Login from 'components/Login'
 import Sidebar from 'components/Sidebar'
 
-import { getProviders, useSession } from 'next-auth/react'
+import { getProviders, useSession, getSession } from 'next-auth/react'
 
 export default function Home ({ trendingResults, followResults, providers }) {
   const { data: session } = useSession()
@@ -38,14 +38,14 @@ export async function getServerSideProps (context) {
     .then((res) => res.json())
 
   const providers = await getProviders()
-  // const session = await getSession(context)
+  const session = await getSession(context)
 
   return {
     props: {
       newsResults,
       randomUsersResults,
-      providers
-      // session
+      providers,
+      session
     }
   }
 }
