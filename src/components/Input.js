@@ -48,10 +48,10 @@ const Input = () => {
     setLoading(true)
     // Refenecia a los datos que se suben cuando se postea un twit
     const docRef = await addDoc(collection(db, 'posts'), {
-      // id: session.user.uid,
-      // username: session.user.name,
-      // userImg: session.user.image,
-      // tag: session.user.tag,
+      id: session.user.uid,
+      username: session.user.name,
+      userImg: session.user.image,
+      tag: session.user.tag,
       text: input,
       createdAt: serverTimestamp()
     })
