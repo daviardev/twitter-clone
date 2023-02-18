@@ -1,4 +1,4 @@
-import { RecoilRoot } from 'recoil'
+import { AppContextProvider } from 'context/AppContext'
 import { SessionProvider } from 'next-auth/react'
 
 import 'styles/globals.css'
@@ -6,9 +6,9 @@ import 'styles/globals.css'
 const App = ({ Component, pageProps: { session, ...pageProps } }) => {
   return (
     <SessionProvider session={session}>
-      <RecoilRoot>
+      <AppContextProvider>
         <Component {...pageProps} />
-      </RecoilRoot>
+      </AppContextProvider>
     </SessionProvider>
   )
 }
