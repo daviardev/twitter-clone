@@ -3,6 +3,7 @@ import Head from 'next/head'
 import Feed from 'components/Feed'
 import Modal from 'components/Modal'
 import Login from 'components/Login'
+import Widget from 'components/Widget'
 import Sidebar from 'components/Sidebar'
 
 import { getProviders, useSession, getSession } from 'next-auth/react'
@@ -10,7 +11,7 @@ import { getProviders, useSession, getSession } from 'next-auth/react'
 import { AppContext } from 'context/AppContext'
 import { useContext } from 'react'
 
-export default function Home ({ trendingResults, followResults, providers }) {
+export default function Home ({ providers }) {
   const { data: session } = useSession()
 
   const [appContext] = useContext(AppContext)
@@ -28,7 +29,7 @@ export default function Home ({ trendingResults, followResults, providers }) {
       <main className='bg-black min-h-screen flex max-w-[1500px] mx-auto'>
         <Sidebar />
         <Feed />
-        {/* Widgets */}
+        <Widget />
         {/* If click modal, modal open */}
         {appContext?.isModalOpen && <Modal />}
       </main>
@@ -37,19 +38,11 @@ export default function Home ({ trendingResults, followResults, providers }) {
 }
 // API for get new notice and detect session
 export async function getServerSideProps (context) {
-  const newsResults = await fetch('https://saurav.tech/NewsAPI/top-headlines/category/business/us.json')
-    .then((res) => res.json())
-
-  const randomUsersResults = await fetch('https://randomuser.me/api/?results=30&inc=name,login,picture')
-    .then((res) => res.json())
-
   const providers = await getProviders()
   const session = await getSession(context)
 
   return {
     props: {
-      newsResults,
-      randomUsersResults,
       providers,
       session
     }

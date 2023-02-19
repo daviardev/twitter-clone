@@ -8,6 +8,7 @@ import { AppContext } from 'context/AppContext'
 
 import Posts from 'components/Posts'
 import Modal from 'components/Modal'
+import Widget from 'components/Widget'
 import Comment from 'components/Comment'
 import Sidebar from 'components/Sidebar'
 
@@ -75,6 +76,7 @@ const PostPage = () => {
           </div>
           {appContext?.isModalOpen && <Modal />}
         </div>
+        <Widget />
       </main>
     </div>
   )
