@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { useState } from 'react'
 
 import SidebarLink from 'components/SidebarLink'
 import Notification from 'components/Icons/Notification'
@@ -11,6 +12,7 @@ import { HiOutlineInbox, HiOutlineClipboardList, HiOutlineUser, HiOutlineDotsCir
 import { signOut, useSession } from 'next-auth/react'
 
 const Sidebar = () => {
+  const [openOptions, setOpenOptions] = useState(false)
   const { data: session } = useSession()
 
   return (
@@ -35,7 +37,19 @@ const Sidebar = () => {
           <SidebarLink text='More' Icon={HiOutlineDotsCircleHorizontal} />
         </div>
         <button className='hidden xl:inline ml-auto bg-[#1d9bf0] text-white rounded-full w-56 h-[54px] text-lg shadow-md font-bold hover:bg-[#1a8cd8]'>Tweet</button>
-        <div className='text-[#9d9d9d] flex items-center justify-center hoverAnimation xl:ml-auto xl:-mr-5 mt-auto' onClick={signOut}>
+        <div className='text-[#9d9d9d] flex items-center justify-center hoverAnimation xl:ml-auto xl:-mr-5 mt-auto' onClick={() => setOpenOptions(prev => !prev)}>
+
+          {openOptions && (
+            <div className='flex flex-col absolute bottom-[6rem] left-[6rem] w-[250px] p-[12px] rounded-lg bg-black border border-solid border-gray-700'>
+              <div className='flex flex-col gap-4'>
+                <ul className='text-[#d9d9d9]'>
+                  <li className='hoverAnimation'>Add an existing account</li>
+                  <li className='hoverAnimation' onClick={signOut}>Log out @{session.user.tag}</li>
+                </ul>
+              </div>
+            </div>
+          )}
+
           <Image
             alt='Profile image'
             src={session.user.image}
@@ -43,6 +57,7 @@ const Sidebar = () => {
             height={100}
             className='h-10 w-10 rounded-full xl:mr-2.5'
           />
+          
           <div className='hidden xl:inline mr-7'>
             <h4 className='font-bold'>{session.user.name}</h4>
             <p className='text-[#6e767d]'>@{session.user.tag}</p>
