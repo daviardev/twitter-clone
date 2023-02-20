@@ -5,6 +5,7 @@ import { AiOutlineHeart, AiOutlineShareAlt } from 'react-icons/ai'
 import Moment from 'react-moment'
 
 function Comment ({ comment }) {
+  // comment? Se usa para saber sí hay imagen, comment es prop del componente Posts y se trae la imagen del usuario
   return (
     <div className='p-3 flex cursor-pointer border-b border-gray-700'>
       <img
@@ -20,14 +21,17 @@ function Comment ({ comment }) {
                 {comment?.username}
               </h4>
               <span className='ml-1.5 text-sm sm:text-[15px]'>
+                {/* Se trae el tag del usuario del comentario */}
                 @{comment?.tag}{' '}
               </span>
             </div>{' '}
             ·{' '}
             <span className='hover:underline text-sm sm:text-[15px]'>
-              <Moment fromNow>{comment?.timestamp?.toDate()}</Moment>
+              {/* Se extrae el tiempo de publicación del comentario */}
+              <Moment fromNow>{comment?.createdAt?.toDate()}</Moment>
             </span>
             <p className='text-[#d9d9d9] mt-0.5 max-w-lg text-[15px] sm:text-base'>
+              {/* Texto del comentario */}
               {comment?.comment}
             </p>
           </div>

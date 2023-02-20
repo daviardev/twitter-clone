@@ -16,20 +16,30 @@ import { db } from 'firebase/client'
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
 
 const Modal = () => {
+  // Extraer texto del input
   const [input, setInput] = useState('')
-  const [showEmoji, setShowEmoji] = useState(false)
 
+  // Estado para mostrar ventana de emoji
+  const [showEmoji, setShowEmoji] = useState(false)
+  
+  // Contexto para que la ventana modal se cierre
   const [appContext, setAppContext] = useContext(AppContext)
 
+  // Sesión del usuario
   const { data: session } = useSession()
+
+  // Router para ir al tweet una vez publicado el mensaje
   const router = useRouter()
 
+  // Cerrar ventana modal
   const closeModal = () => {
     setAppContext({ ...AppContext, isModalOpen: false })
   }
 
+  // Post que conecta los datos de la base de datos
   const post = appContext.post
 
+  // Envíar comentario a la base de datos
   const sendComment = async (e) => {
     e.preventDefault()
 
@@ -41,9 +51,13 @@ const Modal = () => {
       createdAt: serverTimestamp()
     })
 
+    // Cerrar ventana modal
     setAppContext({ ...appContext, isModalOpen: false })
+
+    // Limpiar input de texto
     setInput('')
 
+    // Envíar al id del tweet
     router.push(`/${appContext.postId}`)
   }
 
@@ -93,6 +107,7 @@ const Modal = () => {
             </div>
 
             <div className='mt-4'>
+              {/* Toma el valor del texto del input */}
               <textarea
                 className='w-[100%] bg-transparent outline-none text-[18px]'
                 rows='4'
@@ -108,7 +123,7 @@ const Modal = () => {
                 <div className='icon rotate-90'>
                   <HiOutlineChartBar className='text-[#1d9bf0] h-[22px]' />
                 </div>
-
+                  {/* Cerrar ventana modal del emoji */}
                 <div className='icon' onClick={() => setShowEmoji(!showEmoji)}>
                   <HiOutlineEmojiHappy className='text-[#1d9bf0] h-[22px]' />
                 </div>
@@ -126,7 +141,7 @@ const Modal = () => {
                     />
                   </div>
                 )}
-
+                {/* Botón desactivado hasta que recibe el texto y evento de onClick para envíar el comentario */}
                 <button
                   disabled={!input.trim()}
                   onClick={sendComment}

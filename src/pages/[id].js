@@ -18,13 +18,13 @@ import { onSnapshot, collection, query, orderBy, doc } from 'firebase/firestore'
 import { BsArrowLeft } from 'react-icons/bs'
 
 const PostPage = () => {
-  const [post, setPost] = useState([])
-  const [comments, setComments] = useState([])
+  const [post, setPost] = useState([]) // Se carga el estado para cargar los post, en este caso el post id que se seleccione 
+  const [comments, setComments] = useState([]) // Se carga el estado para cargar los comentarios
 
-  const [appContext] = useContext(AppContext)
+  const [appContext] = useContext(AppContext) // Contexto del app para la ventana modal
 
-  const router = useRouter()
-  const { id } = router.query
+  const router = useRouter() // Router para dirigir al inicio
+  const { id } = router.query // Id del comentario
 
   // Lista y carga los comentarios
   useEffect(() => onSnapshot(query(collection(db, 'posts', id, 'comments'), orderBy('createdAt', 'desc')),
@@ -62,6 +62,7 @@ const PostPage = () => {
           />
 
           <div className='border-t border-gray-700'>
+            {/* Aumenta el número de comentarios y hace un map de los comentarios hechos */}
             {comments.length > 0 && (
               <div className='pb-72'>
                 {comments.map((comment) => (
@@ -74,6 +75,7 @@ const PostPage = () => {
               </div>
             )}
           </div>
+          {/* Cerrar y abrir la ventana modal */}
           {appContext?.isModalOpen && <Modal />}
         </div>
         <Widget />
@@ -84,6 +86,7 @@ const PostPage = () => {
 
 export default PostPage
 
+// Obtiene la sesión
 export async function getServerSideProps (context) {
   const session = await getSession(context)
 

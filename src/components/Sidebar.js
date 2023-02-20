@@ -12,7 +12,10 @@ import { HiOutlineInbox, HiOutlineClipboardList, HiOutlineUser, HiOutlineDotsCir
 import { signOut, useSession } from 'next-auth/react'
 
 const Sidebar = () => {
+  // Estado de opciones para cerrar sesión
   const [openOptions, setOpenOptions] = useState(false)
+
+  // Datos del usuario
   const { data: session } = useSession()
 
   return (
@@ -37,8 +40,10 @@ const Sidebar = () => {
           <SidebarLink text='More' Icon={HiOutlineDotsCircleHorizontal} />
         </div>
         <button className='hidden xl:inline ml-auto bg-[#1d9bf0] text-white rounded-full w-56 h-[54px] text-lg shadow-md font-bold hover:bg-[#1a8cd8]'>Tweet</button>
-        <div className='text-[#9d9d9d] flex items-center justify-center hoverAnimation xl:ml-auto xl:-mr-5 mt-auto' onClick={() => setOpenOptions(prev => !prev)}>
-
+        <div className='text-[#9d9d9d] flex items-center justify-center hoverAnimation xl:ml-auto xl:-mr-5 mt-auto'
+        // Una vez le da click al perfil, se abre la ventana para mostrar las opciones y cerrar sesión
+        onClick={() => setOpenOptions(prev => !prev)}>
+          {/* Cuando el estado de las opciones cambia a true, se muestra la ventana con las opciones junto con la opción de cerrar sesión */}
           {openOptions && (
             <div className='flex flex-col absolute bottom-[6rem] left-[6rem] w-[250px] p-[12px] rounded-lg bg-black border border-solid border-gray-700'>
               <div className='flex flex-col gap-4'>

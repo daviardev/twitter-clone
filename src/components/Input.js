@@ -14,13 +14,23 @@ import { useSession } from 'next-auth/react'
 import { HiX, HiPhotograph, HiOutlineChartBar, HiOutlineEmojiHappy, HiOutlineCalendar } from 'react-icons/hi'
 
 const Input = () => {
+  // Estado de archivo para cuando seleccione una imagen
   const [file, setFile] = useState(null)
+
+  // Toma lo que se escriba en el input de texto
   const [input, setInput] = useState('')
+
+  // Estado de carga al envíar un nuevo tweet
   const [loading, setLoading] = useState(false)
+
+  // Mostrar la ventana para seleccionar los emojis
   const [showEmoji, setShowEmoji] = useState(false)
 
+  // Detecta y toma todos los datos del usuario logueado
+  // Al usar session, se tiene disponible usar el nombre, tag, img del usuario autenticado
   const { data: session } = useSession()
 
+  // Función que se encarga de añadir la imagen seleccionada del dispositivo al tweet
   const addImageToPost = e => {
     const reader = new FileReader()
     if (e.target.files[0]) {
@@ -42,18 +52,18 @@ const Input = () => {
     setInput(input + emoji)
   }
 
-  // Postear publicación
+  // Envía el tweet a la base de datos con todos los datos correspondientes
   const sendPost = async () => {
     if (loading) return
     setLoading(true)
-    // Refenecia a los datos que se suben cuando se postea un twit
+    // Refenecia a los datos que se suben cuando se postea un tweet
     const docRef = await addDoc(collection(db, 'posts'), {
-      id: session.user.uid,
-      username: session.user.name,
-      userImg: session.user.image,
-      tag: session.user.tag,
-      text: input,
-      createdAt: serverTimestamp()
+      id: session.user.uid, // Id único de cada usuario
+      username: session.user.name, // Nombre de usuario
+      userImg: session.user.image, // Imagen de perfil del usuario
+      tag: session.user.tag, // Nombre en minúsculas y sin espacios del usuario
+      text: input, // Texto que se toma del input de texto
+      createdAt: serverTimestamp() // Crear la fecha, hora y segundos de cuando se hiso el tweet
     })
 
     // Se crea una ruta para cada imagen
@@ -97,14 +107,16 @@ const Input = () => {
               placeholder="What's happening?"
               className='bg-transparent outline-none text-[#d9d9d9] text-lg placeholder-gray-500 tracking-wide w-full min-h-[50px] max-h-[200px]'
             />
+            {/* Cuando se selecciona un archivo, este se posiciona del tal manera que sea visible para tener una previsualización de la imagen */}
             {file && (
               <div className='relative'>
                 <div
                   className='absolute w-8 h-8 bg-[#15181c] hover:bg-[#272c26] bg-opacity-75 rounded-full flex items-center justify-center top-1 left-1 cursor-pointer'
-                  onClick={() => setFile(null)}
+                  onClick={() => setFile(null)} // Llama el estado del archivo para cancelar la imagen seleccionada
                 >
                   <HiX className='text-white h-5' />
                 </div>
+                {/* Imagen seleccionada */}
                 <img
                   src={file}
                   alt='Photo'
@@ -113,6 +125,7 @@ const Input = () => {
               </div>
             )}
           </div>
+          {/* Cuando no esté cargando el tweet al envíar puede escribir, mientras se sube no puede hacerlo para evitar que pueda hacer post mientras se está subiendo un tweet */}
           {!loading && (
             <div className='flex items-center justify-between pt-2.5'>
               <div className='flex items-center'>
@@ -124,6 +137,7 @@ const Input = () => {
                   <label htmlFor='file'>
                     <HiPhotograph className='h-[22px] text-[#1d9bf0] cursor-pointer' />
                   </label>
+                  {/* Input para subir la imagen */}
                   <input
                     id='file'
                     type='file'
@@ -137,6 +151,7 @@ const Input = () => {
                   <HiOutlineChartBar className='text-[#1d9bf0] h-[22px]' />
                 </div>
 
+                {/* Abrir ventana para seleccionar los emojis */}
                 <div className='icon' onClick={() => setShowEmoji(!showEmoji)}>
                   <HiOutlineEmojiHappy className='text-[#1d9bf0] h-[22px]' />
                 </div>

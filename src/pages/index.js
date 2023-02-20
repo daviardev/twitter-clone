@@ -30,13 +30,13 @@ export default function Home ({ providers }) {
         <Sidebar />
         <Feed />
         <Widget />
-        {/* If click modal, modal open */}
+        {/* Cerrar y abrir la ventana modal */}
         {appContext?.isModalOpen && <Modal />}
       </main>
     </div>
   )
 }
-// API for get new notice and detect session
+// Obtiene la sesión
 export async function getServerSideProps (context) {
   const providers = await getProviders()
   const session = await getSession(context)

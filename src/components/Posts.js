@@ -14,16 +14,25 @@ import { BsTrash, BsHeart, BsHeartFill } from 'react-icons/bs'
 import { HiDotsHorizontal, HiOutlineChartBar, HiSwitchHorizontal, HiOutlineChat } from 'react-icons/hi'
 
 const Posts = ({ id, post, postPage }) => {
+  // Cambiar el estado del like
   const [liked, setLiked] = useState(false)
+
+  // Aumentar el número de likes
   const [likes, setLikes] = useState([])
+
+  // Aumentar el número de comentarios
   const [comments, setComments] = useState([])
 
+  // Traer datos del usuario
   const { data: session } = useSession()
+
+  // Dirigir a la página del tweet
   const router = useRouter()
 
+  // Contexto para abrir la ventana modal
   const [appContext, setAppContext] = useContext(AppContext)
 
-  // Send like to posts
+  // Dar like al tweet
   useEffect(
     () =>
       onSnapshot(collection(db, 'posts', id, 'likes'), (snapshot) =>
@@ -32,7 +41,7 @@ const Posts = ({ id, post, postPage }) => {
     [db, id]
   )
 
-  // Load comments of the post
+  // Cargar comentarios
   useEffect(
     () =>
       onSnapshot(
@@ -45,7 +54,7 @@ const Posts = ({ id, post, postPage }) => {
     [db, id]
   )
 
-  // Aument 1 like when the user click in the buton like
+  // Aumentar el número de like
 
   useEffect(
     () =>
@@ -55,7 +64,7 @@ const Posts = ({ id, post, postPage }) => {
     [likes]
   )
 
-  // When the user set like, like post, if dont like, remove like
+  // Cuando el usuario le da like, el like es true y el número aumenta, si no el like es false y el número disminuye
 
   const likePost = async () => {
     liked
@@ -78,6 +87,7 @@ const Posts = ({ id, post, postPage }) => {
         className='p-3 flex cursor-pointer border-b border-gray-700 hover:bg-[#12121380]'
         onClick={() => router.push(`/${id}`)}
       >
+        {/* Carga imagen del usuario */}
         {!postPage && (
           <img
             src={post?.userImg}
@@ -87,13 +97,6 @@ const Posts = ({ id, post, postPage }) => {
         )}
         <div className='flex flex-col space-y-2 w-full'>
           <div className={`flex ${!postPage && 'justify-between'}`}>
-            {postPage && (
-              <img
-                src={post?.userImg}
-                alt='Picture'
-                className='h-11 w-11 rounded-full mr-4'
-              />
-            )}
             <div className='text-[#6e6e6e]'>
               <div className='inline-block group'>
                 <h4 className={`font-bold text-[15px] sm:text-base text-[#d9d9d9] group-hover:underline ${!postPage && 'inline-block'}`}>{post?.username}</h4>
@@ -103,6 +106,7 @@ const Posts = ({ id, post, postPage }) => {
               <span className='hover:underline text-sm sm:text-[15px]'>
                 <Moment fromNow>{post?.createdAt?.toDate()}</Moment>
               </span>
+              {/* Coloca el texto que se escribió */}
               {!postPage && (
                 <p className='text-[#d9d9d9] text-[15px] sm:text-base mt-0.5'>{post?.text}</p>
               )}
@@ -130,13 +134,14 @@ const Posts = ({ id, post, postPage }) => {
               <div className='icon group-hover:bg-[#1d9bf0] group-hover:bg-opacity-10'>
                 <HiOutlineChat className='h-5 group-hover:text-[#1d9bf0]' />
               </div>
+              {/* Aumenta el número de comentarios y muestra el número */}
               {comments.length > 0 && (
                 <span className='group-hover:text-[#1d9bf0] text-sm'>
                   {comments.length}
                 </span>
               )}
             </div>
-
+            {/* Cuando el usuario que hiso el post está autenticado, puede eliminar el tweet, si no se mostrará otro ícono */}
             {session.user.uid === post?.id
               ? (
                 <div
@@ -164,10 +169,12 @@ const Posts = ({ id, post, postPage }) => {
               className='flex items-center space-x-1 group'
               onClick={(e) => {
                 e.stopPropagation()
+                // Función de like
                 likePost()
               }}
             >
               <div className='icon group-hover:bg-pink-600/10'>
+                {/* Cuando el estado del like cambie, se muestra un ícono diferente */}
                 {liked
                   ? (
                     <BsHeartFill className='h-5 text-pink-600' />
@@ -176,12 +183,14 @@ const Posts = ({ id, post, postPage }) => {
                     <BsHeart className='h-5 group-hover:text-pink-600' />
                     )}
               </div>
+              {/* Una vez se le da like, el estado pasa a true y aumenta un número */}
               {likes.length > 0 && (
                 <span
                   className={`group-hover:text-pink-600 text-sm ${
                   liked && 'text-pink-600'
                 }`}
                 >
+                  {/* Se muestra la cantidad de likes */}
                   {likes.length}
                 </span>
               )}

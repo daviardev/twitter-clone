@@ -15,5 +15,5 @@ const firebaseConfig = {
 // Cuando detecta muchas aplicaciones de firebase, solo obtiene una para evitar errores
 export const app = !getApps().length ? initializeApp(firebaseConfig) : getApp()
 
-export const db = getFirestore()
-export const storage = getStorage()
+export const db = getFirestore() // Se exporta firestore
+export const storage = getStorage() // Se exporta storage

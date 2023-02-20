@@ -10,9 +10,10 @@ import { collection, onSnapshot, orderBy, query } from 'firebase/firestore'
 import Posts from './Posts'
 
 const Feed = () => {
+  // Se crea estado el cual se encarga de listar los posts
   const [posts, setPosts] = useState([])
 
-  // Get posts
+  // Función que obtiene los post en todo momento por fecha de creación y en ordes decesndente
   useEffect(() => {
     onSnapshot(
       query(collection(db, 'posts'), orderBy('createdAt', 'desc')), // Get and order posts
@@ -33,6 +34,7 @@ const Feed = () => {
 
         <Input />
         <div className='pb-72'>
+          {/* Se hace el renderizado de los post hechos */}
           {posts.map(post => (
             <Posts
               id={post.id}
